@@ -15,9 +15,10 @@ const login = async (req, res) =>{
 
     //const user = await User.db("users").json()
 
-    const user = await User.collection("users")
+    const user = await User.db.collection('users').find({}).toArray()
 
    // res.send('login user')
+   console.log(user);
    res.send("Msg :"+ user)
 } 
 
