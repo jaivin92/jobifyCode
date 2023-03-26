@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 const connectDB = (url) => {
     //mongoose.model.
     return mongoose.connect(url)
+    //return mongoose.createConnection()
 }
 
 export default connectDB
