@@ -1,10 +1,21 @@
 import User from "../model/User.js"
 import { StatusCodes } from "http-status-codes"
+import {BadRequestError} from "../error/index.js"
 
 const register = async (req, res) =>{
-        const user = await User.create(req.body)
-        res.status(StatusCodes.OK).json({user})
-        //res.status(500).json({msg:'server error'})
+    const { name, email, password } = req.body
+    if(!name || !email || !password){
+        throw new BadRequestError('Please Provide all values')
+    }
+
+    const userAlreadyExists = await User.findOne({email})
+    if(userAlreadyExists){
+        throw new BadRequestError('User Already exists')
+    }
+
+     const user = await User.create({name, email,password})
+     res.status(StatusCodes.OK).json({user})
+   //res.status(500).json({msg:'server error'})
    // res.send('register user')
 } 
 
@@ -24,6 +35,7 @@ const login = async (req, res) =>{
 
 const update = (req, res) =>{
     res.send('update user')
+    user.save()
 } 
 
 export {register, login,update}

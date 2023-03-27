@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema({
     default: 'my city',
   },
 })
-
+//password has script
 UserSchema.pre('save', async function () {
   // console.log(this.modifiedPaths())
   if (!this.isModified('password')) return
