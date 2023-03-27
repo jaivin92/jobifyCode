@@ -14,7 +14,13 @@ const register = async (req, res) =>{
     }
 
      const user = await User.create({name, email,password})
-     res.status(StatusCodes.OK).json({user})
+     const token = user.createJWT()
+     res.status(StatusCodes.OK).json({user:{
+        email:user.email,
+        lastname:user.lastName,
+        location:user.location,
+        name:user.name
+     }, token, location:user.location})
    //res.status(500).json({msg:'server error'})
    // res.send('register user')
 } 
@@ -30,7 +36,7 @@ const login = async (req, res) =>{
 
    // res.send('login user')
    console.log(user);
-   res.send("Msg :"+ user)
+   res.send({Msg : user})
 } 
 
 const update = (req, res) =>{
