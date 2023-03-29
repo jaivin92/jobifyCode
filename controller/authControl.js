@@ -1,6 +1,6 @@
 import User from "../model/User.js"
 import { StatusCodes } from "http-status-codes"
-import {BadRequestError} from "../error/index.js"
+import {BadRequestError , UnAuthenticatedError} from "../error/index.js"
 
 const register = async (req, res) =>{
     const { name, email, password } = req.body
@@ -15,7 +15,7 @@ const register = async (req, res) =>{
 
      const user = await User.create({name, email,password})
      const token = user.createJWT()
-     res.status(StatusCodes.OK).json({user:{
+     res.status(StatusCodes.CREATED).json({user:{
         email:user.email,
         lastname:user.lastName,
         location:user.location,
@@ -26,17 +26,23 @@ const register = async (req, res) =>{
 } 
 
 const login = async (req, res) =>{
-    console.log(process.env.MONGO_URL)
-    //single find
-    //const user = await User.findOne("test1@t.com")
+    var { email, password} = req.body
+    console.log("1",email)
+    if(!email || !password){
+        throw new BadRequestError('Please provide all values')
+    }
+    const user = await User.findOne({email}).select('+password')
+    if(!user){
+        throw  new UnAuthenticatedError('Not Registered With Email')
+    }
+    const isPasswordCorrect = await user.comparePassword(password)
 
-    //const user = await User.db("users").json()
-
-    const user = await User.db.collection('users').find({}).toArray()
-
-   // res.send('login user')
-   console.log(user);
-   res.send({Msg : user})
+    if(!isPasswordCorrect){
+        throw new UnAuthenticatedError('Invalid Password')
+    }
+    const token = user.createJWT()
+    user.password = undefined
+    res.status(StatusCodes.OK).send({user, token, location:user.location})
 } 
 
 const update = (req, res) =>{

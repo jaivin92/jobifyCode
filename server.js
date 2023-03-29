@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 //error handle
 import 'express-async-errors'
+import morgan from 'morgan'
 //db and auth
 import connectDB from './db/connect.js'
 
@@ -14,6 +15,11 @@ import jobsRouter from './routes/jobRoutes.js'
 //middleware
 import notFoundMiddleware from './middleware/not-found.js'
 import errorHandlerMiddleware from './middleware/error-handler.js'
+
+
+if(process.env.NODE_ENV !== "production"){
+    app.use(morgan('dev'))
+}
 
 //app.use(cors())
 app.use(express.json())
@@ -42,7 +48,7 @@ const start = async () => {
     try {
         await connectDB(process.env.MONGO_URL)
         app.listen (port, ()=>{
-            console.log(`Server run on ${port}....` )
+            console.log(`Server run on ${port}....${process.env.NODE_ENV}` )
         })
     } catch (error) {
         console.log(error)        
