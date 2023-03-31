@@ -15,7 +15,7 @@ import jobsRouter from './routes/jobRoutes.js'
 //middleware
 import notFoundMiddleware from './middleware/not-found.js'
 import errorHandlerMiddleware from './middleware/error-handler.js'
-
+import authenticateUser from './middleware/auth.js'
 
 if(process.env.NODE_ENV !== "production"){
     app.use(morgan('dev'))
@@ -35,7 +35,8 @@ app.get('/api', (req,res)=>{
  })
 
 app.use('/api/auth',authRouter)
-app.use('/api/job',jobsRouter)
+app.use('/api/job',authenticateUser, jobsRouter)
+//app.use('/api/job', jobsRouter)
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
 const port = process.env.PORT || 5000
