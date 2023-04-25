@@ -28,7 +28,7 @@ const JobSchema = new mongoose.Schema({
   jobLocation: {
     type: String,
     default:'my city',
-    require: true,
+    require: [true]
   },
 
   createdBy:{
