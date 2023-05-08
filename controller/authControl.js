@@ -27,7 +27,6 @@ const register = async (req, res) =>{
 
 const login = async (req, res) =>{
     var { email, password} = req.body
-    console.log("1",email)
     if(!email || !password){
         throw new BadRequestError('Please provide all values')
     }
@@ -63,7 +62,7 @@ const update = async (req, res) =>{
 
     const token = user.createJWT()
     
-    console.log(req.user)
+    //console.log(req.user)
     //res.send('updateUser')
     res.status(StatusCodes.OK).send({user, token, location:user.location})
 } 
